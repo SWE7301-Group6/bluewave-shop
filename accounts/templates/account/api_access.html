@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<h2 class="mb-3">API Access</h2>
+
+{% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if profile.is_researcher %}
+  <p>
+    Your researcher subscription is
+    <span class="badge bg-success">Active</span>.
+  </p>
+
+  {% if BLUEWAVE_API_DOCS_URL %}
+    <p class="mb-3">
+      <a class="btn btn-outline-dark" href="{{ BLUEWAVE_API_DOCS_URL }}" target="_blank" rel="noopener noreferrer">
+        Open BlueWave API (Swagger) ↗
+      </a>
+    </p>
+  {% endif %}
+
+  {% if profile.has_valid_api_token %}
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Current API Token</h5>
+        <p class="text-muted mb-2">
+          Valid until: <strong>{{ profile.api_jwt_expires_at|date:"Y-m-d H:i:s T" }}</strong>
+        </p>
+
+        <div class="mb-2">
+          <label id="jwtLabel" class="form-label" for="jwtField">JWT</label>
+          <div class="input-group">
+            <input
+              id="jwtField"
+              name="jwt"
+              type="password"
+              class="form-control"
+              value="{{ profile.api_jwt }}"
+              readonly
+              autocomplete="off"
+              aria-labelledby="jwtLabel"
+              placeholder="JWT access token"
+              title="Your BlueWave API JWT access token"
+            >
+            <button class="btn btn-outline-secondary" type="button" onclick="toggleJwt(this)" aria-label="Show or hide JWT">Show</button>
+            <button class="btn btn-outline-primary" type="button" onclick="copyJwt(this)" aria-label="Copy JWT to clipboard">Copy</button>
+          </div>
+        </div>
+
+        <details class="mt-3">
+          <summary>How to call the API with this token</summary>
+<pre class="bg-light p-3 border rounded mt-2 mb-0">curl -s "{{ BLUEWAVE_API_BASE }}/observations?start=2025-01-01T00:00:00Z&amp;end=2025-12-31T23:59:59Z" ^
+  -H "Authorization: Bearer {{ profile.api_jwt }}"</pre>
+          <p class="text-muted mt-2 mb-0">
+            Use the token in the <code>Authorization</code> header as shown above.
+          </p>
+        </details>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning mb-4">
+      You do not have a current API token.
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Request / Refresh API Token</h5>
+      <p class="text-muted">
+        This authenticates with the BlueWave API’s <code>/auth/login</code> using your API credentials.
+        If your API account does not exist yet, we’ll create it automatically and then log you in.
+      </p>
+      <form method="post" action="{% url 'request_api_token' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary">Request API Token</button>
+      </form>
+    </div>
+  </div>
+
+{% else %}
+  <div class="alert alert-info">
+    An active researcher subscription is required.
+    <a href="/subscriptions/">Subscribe now</a>.
+  </div>
+{% endif %}
+
+<script>
+  function toggleJwt(btn) {
+    const el = document.getElementById('jwtField');
+    if (el.type === 'password') {
+      el.type = 'text';
+      btn.textContent = 'Hide';
+    } else {
+      el.type = 'password';
+      btn.textContent = 'Show';
+    }
+  }
+  function copyJwt(btn) {
+    const el = document.getElementById('jwtField');
+    const prevType = el.type;
+    el.type = 'text'; // ensure it's selectable even if hidden
+    el.select();
+    el.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    el.type = prevType;
+    const prev = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = prev, 1200);
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-3">Dashboard</h2>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Security</h5>
+        <p class="card-text">Two‑factor auth: <strong>{{ profile.totp_enabled|yesno:"Enabled,Disabled" }}</strong></p>
+        <a class="btn btn-outline-primary" href="/accounts/setup-totp/">Set up Authenticator</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Orders</h5>
+        <p class="card-text">View your orders and purchases.</p>
+        <a class="btn btn-outline-primary" href="/shop/orders/">My orders</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">API Access</h5>
+        <p class="card-text">Researcher subscription status: <strong>{{ profile.is_researcher|yesno:"Active,Not active" }}</strong></p>
+        <a class="btn btn-outline-primary" href="/accounts/api-access/">Manage API access</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
