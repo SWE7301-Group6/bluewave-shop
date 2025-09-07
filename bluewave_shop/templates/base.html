@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ SITE_NAME }}{% block title %}{% endblock %}</title>
+
+  <!-- Bootstrap + Lux theme -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}"/>
+  <link rel="icon" href="{% static 'img/logo.png' %}" />
+
+  <!-- Optional utils -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
+      <img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }} logo" class="brand-logo" height="36" width="36">
+      <span>{{ SITE_NAME }}</span>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarsMain"
+      aria-controls="navbarsMain"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      title="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Classic options (no Pricing, no Docs) -->
+        <li class="nav-item"><a class="nav-link" href="/#solutions">Solutions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/#products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/#deployments">Deployments</a></li>
+      </ul>
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/accounts/dashboard/">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/accounts/logout/">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="/accounts/login/">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/accounts/register/">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="py-4">
+  <div class="container">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close alert"
+          title="Close alert"
+        ></button>
+      </div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="bg-light py-4 mt-5 border-top">
+  <div class="container text-center text-muted small">
+    © {{ SITE_NAME }} {{ now|date:"Y" }} · <a href="/subscriptions/">Subscriptions</a> · <a href="/#products">Products</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Tiny intersection observer for reveal effects -->
+<script>
+  (function() {
+    const els = document.querySelectorAll("[data-reveal]");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in-view"); });
+    }, { threshold: 0.14 });
+    els.forEach(el => io.observe(el));
+  }());
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero gradient-blue text-white rounded-3 p-4 p-md-5 mb-5 position-relative overflow-hidden" data-reveal>
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <h1 class="display-5 fw-bold mb-3">Renewable Micro-Desalination &amp; Ocean Intelligence</h1>
+      <p class="lead mb-4">
+        BlueWave Solutions builds solar-powered floating buoys that produce fresh water and stream real-time
+        environmental metrics for climate resilience.
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="/shop/" class="btn btn-light btn-lg">Browse Products</a>
+        <a href="/accounts/api-access/" class="btn btn-outline-light btn-lg">Get API Access</a>
+      </div>
+    </div>
+    <div class="col-lg-5 d-none d-lg-block text-center">
+      <img src="{% static 'img/logo.png' %}" alt="BlueWave buoy" class="hero-logo floating" width="220" height="220">
+    </div>
+  </div>
+  <div class="hero-waves"></div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions" class="mb-5" data-reveal>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h5 class="card-title">Solar Micro-Desalination</h5>
+          <p class="text-muted">Compact units converting seawater to potable water with zero grid dependency.</p>
+          <ul class="list-unstyled small mb-0">
+            <li>• Modular & easy to deploy</li>
+            <li>• Low maintenance</li>
+            <li>• Optimized for coastal communities</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h5 class="card-title">Environmental Telemetry</h5>
+          <p class="text-muted">Real-time salinity, pH, turbidity and pollutant levels for research & planning.</p>
+          <ul class="list-unstyled small mb-0">
+            <li>• Processed datasets (researcher)</li>
+            <li>• Raw telemetry (admin/raw tier)</li>
+            <li>• Secure JWT access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h5 class="card-title">Analytics-Ready API</h5>
+          <p class="text-muted">Subscription-based access to historical &amp; live data streams via the BlueWave API.</p>
+          <ul class="list-unstyled small mb-0">
+            <li>• Tiered access control</li>
+            <li>• Robust authentication</li>
+            <li>• JSON output</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS GRID -->
+<section id="products" class="mb-5" data-reveal>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="m-0">On sale</h3>
+    <a href="/shop/" class="link-primary text-decoration-none">View all →</a>
+  </div>
+
+  {% if products %}
+    <div class="row g-4">
+      {% for product in products %}
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 shadow-hover">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="text-muted flex-grow-1">
+                {{ product.short_description|default:product.description|truncatewords:22 }}
+              </p>
+              <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="fw-bold">£{{ product.price_cents|floatformat:-2 }}</span>
+                <a href="/shop/{{ product.slug }}/" class="btn btn-primary">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No products available yet.</div>
+  {% endif %}
+</section>
+
+<!-- DEPLOYMENTS -->
+<section id="deployments" class="mb-5" data-reveal>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="m-0">Where we’re deployed</h3>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h6 class="text-uppercase text-muted small">Goa, India</h6>
+          <p class="mb-2">Coastal village desalination pilot supplying 120 households.</p>
+          <span class="badge bg-primary-subtle text-primary">Salinity</span>
+          <span class="badge bg-primary-subtle text-primary">pH</span>
+          <span class="badge bg-primary-subtle text-primary">Turbidity</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h6 class="text-uppercase text-muted small">Accra, Ghana</h6>
+          <p class="mb-2">Harbour monitoring for water quality &amp; spill detection.</p>
+          <span class="badge bg-primary-subtle text-primary">Pollutants</span>
+          <span class="badge bg-primary-subtle text-primary">pH</span>
+          <span class="badge bg-primary-subtle text-primary">DO</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-hover">
+        <div class="card-body">
+          <h6 class="text-uppercase text-muted small">Cornwall, UK</h6>
+          <p class="mb-2">University research buoy for coastal ecology studies.</p>
+          <span class="badge bg-primary-subtle text-primary">Chlorophyll</span>
+          <span class="badge bg-primary-subtle text-primary">Salinity</span>
+          <span class="badge bg-primary-subtle text-primary">Temp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

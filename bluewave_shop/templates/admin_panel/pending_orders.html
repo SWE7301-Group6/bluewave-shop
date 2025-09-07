@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Pending Orders (paid but not approved)</h2>
+<table class="table table-hover align-middle">
+  <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Created</th><th></th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr>
+      <td>{{ o.id }}</td>
+      <td>{{ o.user.username }}</td>
+      <td>£{{ o.total_cents|floatformat:-2 }}</td>
+      <td>{{ o.created_at }}</td>
+      <td><a class="btn btn-sm btn-success" href="/admin-panel/approve-order/{{ o.id }}/">Approve</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">Nothing to approve.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
