@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="mb-4" data-reveal>
+  <h2 class="m-0">Subscriptions</h2>
+  <p class="text-muted">Choose a plan to access BlueWave environmental metrics via the API.</p>
+</section>
+
+<section data-reveal>
+  {% if subs %}
+    <div class="row g-4">
+      {% for sub in subs %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-hover">
+            {# Try an image named by slug, fallback to a default if not found #}
+            <img
+              src="{% static 'img/subscriptions/' %}{{ sub.slug }}.jpg"
+              alt="{{ sub.name }} plan"
+              class="card-img-top"
+              onerror="this.onerror=null;this.src='{% static 'img/subscriptions/processed.jpg' %}';"
+            >
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ sub.name }}</h5>
+              <p class="text-muted flex-grow-1">{{ sub.description }}</p>
+
+              <div class="d-flex align-items-center justify-content-between mt-2">
+                <div>
+                  <div class="fw-bold">£{{ sub.price_cents|floatformat:-2 }} <span class="text-muted fs-6">/ month</span></div>
+                  <span class="badge bg-primary-subtle text-primary">{{ sub.get_product_type_display }}</span>
+                </div>
+                <a href="/shop/{{ sub.slug }}/checkout/" class="btn btn-primary">Subscribe</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      No active subscription plans are available yet. Please check back soon.
+    </div>
+  {% endif %}
+</section>
+
+{% endblock %}

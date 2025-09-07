@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Environmental Dashboard</h2>
+<p class="text-muted">Last 7 days by default. Adjust the time window and refresh.</p>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <label class="form-label">Start</label>
+    <input id="start" type="datetime-local" class="form-control" value="{{ start|date:'Y-m-d\TH:i' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">End</label>
+    <input id="end" type="datetime-local" class="form-control" value="{{ end|date:'Y-m-d\TH:i' }}">
+  </div>
+  <div class="col-md-3 d-flex align-items-end">
+    <button id="refresh" class="btn btn-primary w-100">Refresh</button>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Salinity</h5>
+        <canvas id="chart-salinity" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">pH</h5>
+        <canvas id="chart-ph" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Pollutant Index</h5>
+        <canvas id="chart-pollutant" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function loadData() {
+  const start = document.getElementById('start').value + ':00';
+  const end = document.getElementById('end').value + ':00';
+  const res = await fetch(`/metrics/proxy/?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+  const data = await res.json();
+  if (!res.ok) { alert(data.error || 'Error'); return; }
+  // Expect data format: { timestamps: [...], salinity: [...], ph: [...], pollutant_index: [...] }
+  const ts = data.timestamps || [];
+  const sal = data.salinity || [];
+  const ph = data.ph || [];
+  const pol = data.pollutant_index || [];
+
+  renderLine('chart-salinity', ts, sal, 'Salinity');
+  renderLine('chart-ph', ts, ph, 'pH');
+  renderLine('chart-pollutant', ts, pol, 'Pollutant Index');
+}
+
+function renderLine(canvasId, labels, values, label) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (window[canvasId]) { window[canvasId].destroy(); }
+  window[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ label, data: values, tension: 0.3 }]},
+    options: { responsive: true, scales: { x: { display: true }, y: { display: true } } }
+  });
+}
+
+document.getElementById('refresh').addEventListener('click', loadData);
+window.addEventListener('load', loadData);
+</script>
+{% endblock %}
