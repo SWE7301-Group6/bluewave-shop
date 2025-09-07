@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Products</h2>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for p in products %}
+  <div class="col">
+    <div class="card h-100 card-product shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{ p.name }}</h5>
+        <p class="card-text">{{ p.description|truncatechars:120 }}</p>
+        <span class="badge bg-info">{{ p.get_product_type_display }}</span>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <span class="fw-bold">£{{ p.price_cents|floatformat:-2 }}</span>
+        <a href="{% url 'product_detail' p.slug %}" class="btn btn-primary btn-sm">View</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <p>No products available.</p>
+  {% endfor %}
+</div>
+{% endblock %}

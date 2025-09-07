@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4" data-reveal>
+  <div class="col-md-6">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
+    {% endif %}
+  </div>
+  <div class="col-md-6 d-flex flex-column">
+    <h1 class="h3">{{ product.name }}</h1>
+    <p class="text-muted">{{ product.description }}</p>
+    <div class="mt-auto d-flex align-items-center justify-content-between">
+      <span class="display-6 fw-bold">£{{ product.price_cents|floatformat:-2 }}</span>
+      <a class="btn btn-primary btn-lg" href="/shop/{{ product.slug }}/checkout/">Buy now</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
