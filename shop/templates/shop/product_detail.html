@@ -1,10 +1,15 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="row g-4" data-reveal>
   <div class="col-md-6">
-    {% if product.image %}
-      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
-    {% endif %}
+    <!-- Image: try .jpg -> then .png -> then placeholder -->
+    <img
+      src="{% static 'img/products/' %}{{ product.slug }}.jpg"
+      alt="{{ product.name }}"
+      class="img-fluid rounded shadow-sm"
+      onerror="this.onerror=null;this.src='{% static 'img/products/' %}{{ product.slug }}.png'; this.onerror=function(){ this.src='{% static 'img/products/placeholder.jpg' %}'; };"
+    >
   </div>
   <div class="col-md-6 d-flex flex-column">
     <h1 class="h3">{{ product.name }}</h1>

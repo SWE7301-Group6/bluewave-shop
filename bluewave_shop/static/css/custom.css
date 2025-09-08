@@ -54,3 +54,26 @@
 /* Reveal on scroll */
 [data-reveal]{ opacity:0; transform: translateY(12px); transition: all .5s ease; }
 [data-reveal].in-view{ opacity:1; transform: translateY(0); }
+
+/* Compact product cards on the home page */
+.card-compact .card-body { padding: .75rem .9rem; }
+
+/* Thumbnail container keeps a fixed height and crops politely */
+.thumb-wrap{
+  width: 100%;
+  height: 140px;            /* tweak to taste */
+  overflow: hidden;
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+  background: #f8fafc;      /* subtle backdrop while image loads */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image scales to fill height while preserving aspect */
+.thumb-sm{
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

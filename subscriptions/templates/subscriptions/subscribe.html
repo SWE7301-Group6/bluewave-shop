@@ -14,12 +14,12 @@
       {% for sub in subs %}
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 shadow-hover">
-            {# Try an image named by slug, fallback to a default if not found #}
+            <!-- Image: try .jpg -> then .png -> then default processed.jpg -->
             <img
               src="{% static 'img/subscriptions/' %}{{ sub.slug }}.jpg"
               alt="{{ sub.name }} plan"
               class="card-img-top"
-              onerror="this.onerror=null;this.src='{% static 'img/subscriptions/processed.jpg' %}';"
+              onerror="this.onerror=null;this.src='{% static 'img/subscriptions/' %}{{ sub.slug }}.png'; this.onerror=function(){ this.src='{% static 'img/subscriptions/processed.jpg' %}'; };"
             >
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{ sub.name }}</h5>

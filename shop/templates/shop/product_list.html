@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <h2>Products</h2>
 <div class="row row-cols-1 row-cols-md-3 g-4">
   {% for p in products %}
   <div class="col">
     <div class="card h-100 card-product shadow-sm">
+
+      <!-- Image: try .jpg -> then .png -> then placeholder -->
+      <img
+        src="{% static 'img/products/' %}{{ p.slug }}.jpg"
+        class="card-img-top"
+        alt="{{ p.name }}"
+        onerror="this.onerror=null;this.src='{% static 'img/products/' %}{{ p.slug }}.png'; this.onerror=function(){ this.src='{% static 'img/products/placeholder.jpg' %}'; };"
+      >
+
       <div class="card-body">
         <h5 class="card-title">{{ p.name }}</h5>
         <p class="card-text">{{ p.description|truncatechars:120 }}</p>

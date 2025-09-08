@@ -1,0 +1,3 @@
+body { scroll-behavior: smooth; }
+.card-product { transition: transform .2s; }
+.card-product:hover { transform: translateY(-3px); }
